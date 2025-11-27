@@ -23,12 +23,12 @@ layout = dbc.Container([
 
     # --- Row 0: Filters ---
     dbc.Row([
-        # 1. Date Range Filter (Replaces Month Dropdown)
+        # 1. Date Range Filter
         dbc.Col([
             html.Label("Select Date Range:", className="fw-bold"),
             html.Div(
                 dcc.DatePickerRange(
-                    id='date-picker-range-loc',  # Unique ID
+                    id='date-picker-range-loc',
                     display_format='YYYY-MM-DD',
                     start_date=None,
                     end_date=None,
@@ -81,7 +81,8 @@ layout = dbc.Container([
             dbc.Card([
                 dbc.CardHeader("Total Subscriptions by Country"),
                 dbc.CardBody([
-                    dcc.Graph(id='country-pie-chart', style={'height': '500px'})
+                    # UPDATED: Increased height to 750px
+                    dcc.Graph(id='country-pie-chart', style={'height': '750px'})
                 ])
             ], className="shadow-sm")
         ], width=12)
@@ -202,11 +203,16 @@ def register_callbacks(app):
                     names='Location',
                     title='Distribution by Country',
                     template="plotly_white",
-                    hole=0  # Makes it a Donut chart (optional, set to 0 for full pie)
+                    hole=0  # Full Pie
                 )
 
                 fig.update_traces(textposition='inside', textinfo='percent+label')
-                fig.update_layout(legend_title="Country")
+
+                # UPDATED: Reduced margins to make the pie chart fill the container
+                fig.update_layout(
+                    legend_title="Country",
+                    margin=dict(t=40, b=0, l=0, r=0)
+                )
             else:
                 fig = px.pie(title="Location Data Missing")
 

@@ -12,6 +12,7 @@ from Data.get_localsqldata import load_data
 # --- IMPORT PAGES ---
 from subscription_pages.daily_overview import layout as page1_layout, register_callbacks as register_page1_callbacks
 from subscription_pages.monthly_overview import layout as page2_layout, register_callbacks as register_page2_callbacks
+from subscription_pages.pie_chart import layout as page3_layout, register_callbacks as register_page3_callbacks
 # ... (keep other page imports as they were) ...
 
 # --- INITIALIZE APP ---
@@ -51,6 +52,7 @@ def create_navbar():
         children=[
             dbc.NavItem(dbc.NavLink("Daily Overview", href="/page-1")),
             dbc.NavItem(dbc.NavLink("Monthly Overview", href="/page-2")),
+            dbc.NavItem(dbc.NavLink("Pie Chart", href="/page-3")),
             # ... (keep your other links) ...
         ],
         brand="Employer Subscription Dashboard",
@@ -72,7 +74,7 @@ app.layout = html.Div([
 # --- REGISTER CALLBACKS ---
 register_page1_callbacks(app)
 register_page2_callbacks(app)
-
+register_page3_callbacks(app)
 
 # ... (register other pages) ...
 
@@ -87,6 +89,8 @@ def display_page(pathname):
     # ... (handle other pages) ...
     elif pathname == '/page-2':
         return page2_layout
+    elif pathname == '/page-3':
+        return page3_layout
     else:
         return page1_layout
 

@@ -1,3 +1,5 @@
+#fetches local sql data hosted on xampp sql server
+
 import pandas as pd
 from sqlalchemy import create_engine, text
 import pymysql

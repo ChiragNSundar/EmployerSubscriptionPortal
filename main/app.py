@@ -1,4 +1,5 @@
-# job_portal_dashboard/app.py
+# dashboard/app.py
+# The main app which runs the whole code
 
 import pandas as pd
 import dash

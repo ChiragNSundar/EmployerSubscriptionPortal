@@ -1,3 +1,5 @@
+#pushes data retrieved from data_fetch.py to local sql hosted using xampp
+
 import pandas as pd
 import numpy as np
 from sqlalchemy import create_engine, text

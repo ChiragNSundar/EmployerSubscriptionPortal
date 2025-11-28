@@ -19,13 +19,12 @@ def create_card(title, card_id, color="primary"):
 
 
 layout = dbc.Container([
-    html.H3("Daily Overview Dashboard", className="my-4 text-center"),
-
+    html.H3("Daily Overview Dashboard", className="text-center my-4"),
     # --- Row 0: Filters ---
     dbc.Row([
         # 1. Date Range Picker
         dbc.Col([
-            html.Label("Select Date Range:", className="fw-bold"),
+            html.Label("Select Date Range:", className="control-label"),
             html.Div(
                 dcc.DatePickerRange(
                     id='date-picker-range',
@@ -41,7 +40,7 @@ layout = dbc.Container([
 
         # 2. Country Filter
         dbc.Col([
-            html.Label("Select Country:", className="fw-bold"),
+            html.Label("Select Country:", className="control-label"),
             dcc.Dropdown(
                 id='country-dropdown',
                 options=[],
@@ -63,7 +62,7 @@ layout = dbc.Container([
             )
         ], width=12, md=4),
 
-    ], className="mb-4 p-3 bg-light rounded shadow-sm"),
+    ], className="mb-4  glass-container"),
 
     # --- Row 1: Placards ---
     dbc.Row([
@@ -79,11 +78,11 @@ layout = dbc.Container([
     dbc.Row([
         dbc.Col([
             dbc.Card([
-                dbc.CardHeader("Daily Trend by Subscription Type"),
+                #dbc.CardHeader("Daily Trend by Subscription Type"),
                 dbc.CardBody([
                     dcc.Graph(id='daily-type-bar-graph', style={'height': '500px'})
                 ])
-            ], className="shadow-sm")
+            ], className="shadow-sm glass-container")
         ], width=12)
     ])
 ], fluid=True)

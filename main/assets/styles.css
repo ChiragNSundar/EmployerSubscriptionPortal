@@ -1,0 +1,153 @@
+/* Import Poppins Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    /* The Blue to Pink/Purple Gradient Background */
+    background: linear-gradient(135deg, #4b9cdb 0%, #c13584 100%);
+    background-attachment: fixed;
+    color: #2d3748; /* Softer dark gray instead of harsh black */
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased; /* Makes text look sharper on Mac */
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- Typography Enhancements --- */
+
+/* Main Page Titles (H1, H2, H3) */
+h1, h2, h3 {
+    font-weight: 700;
+    letter-spacing: -0.5px; /* Tighten spacing for large text */
+    color: #ffffff; /* White text looks best on this gradient */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+}
+
+/* Labels (e.g., "Select Country") */
+label {
+    font-size: 0.85rem;
+    text-transform: uppercase; /* Makes labels look professional */
+    letter-spacing: 1px;       /* Wide spacing for uppercase text */
+    font-weight: 600;
+    color: #4a5568;            /* Dark gray for contrast inside glass containers */
+    margin-bottom: 8px;
+}
+
+/* --- Navbar Styling --- */
+.custom-navbar {
+    background: rgba(30, 34, 42, 0.85) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+    padding-top: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: white !important;
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 10px rgba(0, 210, 255, 0.5); /* Subtle Cyan Glow */
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.75) !important;
+    font-weight: 500;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #ffffff !important;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.6); /* Glow effect on hover */
+    transform: translateY(-1px); /* Slight lift */
+}
+
+/* --- Glassmorphism Container for Filters/Controls --- */
+.glass-container {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    margin-bottom: 25px;
+
+    /* --- THE FIX IS HERE --- */
+    position: relative;  /* Allows z-index to work */
+    z-index: 50;         /* Forces this container to sit ON TOP of the cards below */
+    overflow: visible;   /* Allows the dropdown menu to spill OUT of the box */
+}
+
+/* --- Card Coloring & Typography --- */
+
+/* General Card Styling */
+.card {
+    border-radius: 12px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease-in-out;
+    overflow: hidden; /* Keeps content inside rounded corners */
+}
+
+.card:hover {
+    transform: translateY(-3px); /* Hover lift effect */
+}
+
+/* Card Titles (e.g., "Total Records", "New") */
+.card-title {
+    font-size: 0.85rem !important;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    font-weight: 600;
+    opacity: 0.9;
+    margin-bottom: 5px;
+}
+
+/* Card Numbers (e.g., "2,376") */
+.card-text {
+    font-size: 2.2rem;
+    font-weight: 800; /* Extra Bold */
+    letter-spacing: -1px;
+    margin-bottom: 0;
+}
+
+/* Specific Card Colors */
+.card-total-style { background: linear-gradient(145deg, #1f2937, #111827) !important; color: white; border: none; }
+.card-new-style { background: linear-gradient(145deg, #34d399, #10b981) !important; color: white; border: none; }
+.card-trial-style { background: linear-gradient(145deg, #38bdf8, #0ea5e9) !important; color: white; border: none; }
+.card-renewed-style { background: linear-gradient(145deg, #f472b6, #db2777) !important; color: white; border: none; }
+.card-upgraded-style { background: linear-gradient(145deg, #facc15, #eab308) !important; color: white; border: none; }
+.card-cancelled-style { background: linear-gradient(145deg, #fb923c, #f97316) !important; color: white; border: none; }
+
+/* --- Graph Container Styling --- */
+.graph-container-style {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Graph Title */
+.card-header {
+    background: transparent;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    font-weight: 600;
+    color: #4a5568;
+    font-size: 1.1rem;
+    padding-bottom: 15px;
+}
+/* Fancy Label Style */
+.control-label {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.75rem;        /* Slightly smaller for elegance */
+    text-transform: uppercase; /* Makes it all caps */
+    letter-spacing: 1.5px;     /* Widens the gap between letters (The "Premium" look) */
+    font-weight: 700;          /* Bold */
+    color: #4a5568;            /* Dark Gray (Use #ffffff if on a dark background) */
+    margin-bottom: 8px;        /* Space between label and dropdown */
+    display: block;            /* Ensures it sits on its own line */
+}

@@ -25,7 +25,7 @@ layout = dbc.Container([
     dbc.Row([
         # 1. Date Range Filter
         dbc.Col([
-            html.Label("Select Date Range:", className="fw-bold"),
+            html.Label("Select Date Range:", className="control-label"),
             html.Div(
                 dcc.DatePickerRange(
                     id='date-picker-range-loc',
@@ -41,7 +41,7 @@ layout = dbc.Container([
 
         # 2. Country Filter
         dbc.Col([
-            html.Label("Select Country:", className="fw-bold"),
+            html.Label("Select Country:", className="control-label"),
             dcc.Dropdown(
                 id='country-dropdown-loc',
                 options=[],
@@ -53,7 +53,7 @@ layout = dbc.Container([
 
         # 3. Type Filter
         dbc.Col([
-            html.Label("Select Subscription Type:", className="fw-bold"),
+            html.Label("Select Subscription Type:", className="control-label"),
             dcc.Dropdown(
                 id='type-dropdown-loc',
                 options=[],
@@ -63,7 +63,7 @@ layout = dbc.Container([
             )
         ], width=12, md=4),
 
-    ], className="mb-4 p-3 bg-light rounded shadow-sm"),
+    ], className="mb-4 glass-container"),
 
     # --- Row 1: Placards ---
     dbc.Row([
@@ -79,12 +79,12 @@ layout = dbc.Container([
     dbc.Row([
         dbc.Col([
             dbc.Card([
-                dbc.CardHeader("Total Subscriptions by Country"),
+                #dbc.CardHeader("Total Subscriptions by Country"),
                 dbc.CardBody([
                     # UPDATED: Increased height to 750px
                     dcc.Graph(id='country-pie-chart', style={'height': '750px'})
                 ])
-            ], className="shadow-sm")
+            ], className="shadow-sm glass-container")
         ], width=12)
     ])
 ], fluid=True)

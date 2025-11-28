@@ -25,7 +25,7 @@ layout = dbc.Container([
     dbc.Row([
         # 1. Month Filter (Replaces Date Range)
         dbc.Col([
-            html.Label("Select Month(s):", className="fw-bold"),
+            html.Label("Select Month(s):", className="control-label"),
             dcc.Dropdown(
                 id='month-dropdown',
                 options=[],  # Populated via callback
@@ -37,7 +37,7 @@ layout = dbc.Container([
 
         # 2. Country Filter
         dbc.Col([
-            html.Label("Select Country:", className="fw-bold"),
+            html.Label("Select Country:", className="control-label"),
             dcc.Dropdown(
                 id='country-dropdown-monthly',  # Unique ID for this page
                 options=[],
@@ -49,7 +49,7 @@ layout = dbc.Container([
 
         # 3. Type Filter
         dbc.Col([
-            html.Label("Select Subscription Type:", className="fw-bold"),
+            html.Label("Select Subscription Type:", className="control-label"),
             dcc.Dropdown(
                 id='type-dropdown-monthly',  # Unique ID for this page
                 options=[],
@@ -59,7 +59,7 @@ layout = dbc.Container([
             )
         ], width=12, md=4),
 
-    ], className="mb-4 p-3 bg-light rounded shadow-sm"),
+    ], className="mb-4 glass-container"),
 
     # --- Row 1: Placards ---
     dbc.Row([
@@ -75,11 +75,11 @@ layout = dbc.Container([
     dbc.Row([
         dbc.Col([
             dbc.Card([
-                dbc.CardHeader("Monthly Trend by Subscription Type"),
+                #dbc.CardHeader("Monthly Trend by Subscription Type"),
                 dbc.CardBody([
                     dcc.Graph(id='monthly-type-bar-graph', style={'height': '500px'})
                 ])
-            ], className="shadow-sm")
+            ], className="shadow-sm glass-container")
         ], width=12)
     ])
 ], fluid=True)

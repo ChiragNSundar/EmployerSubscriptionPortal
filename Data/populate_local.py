@@ -75,3 +75,39 @@ if __name__ == "__main__":
         push_to_local_sql(remote_df, LOCAL_DB_CONFIG)
 
     print("🏁 Process Finished.")
+
+"""
+CREATE TABLE graph_subscription (
+    id INT NOT NULL PRIMARY KEY,
+    userID INT,
+    siteInstanceID INT,
+    dateUTC DATETIME,
+    type VARCHAR(50),
+    userStatus VARCHAR(50),
+    customerID VARCHAR(100),
+    country VARCHAR(5),
+    email VARCHAR(255),
+    companyName VARCHAR(255),
+    productID INT,
+    recruitMode VARCHAR(50),
+    customerCreatedTimeUTC DATETIME,
+    currentPackageName VARCHAR(100),
+    currentPackageAmountEUR DECIMAL(10, 2),
+    currentSubsStatus VARCHAR(50),
+    currentSubsStartDate DATETIME,
+    currentSubsEndDate DATETIME,
+    convertedFromTrial TINYINT, -- Uses 0 or 1
+    totalRevenueEUR DECIMAL(10, 2),
+    initialSubsStartDate DATETIME,
+    lastPaymentReceivedOn DATETIME NULL,
+    lastAmountPaidEUR DECIMAL(10, 2),
+    subscriptionUpgradedAt DATETIME NULL,
+    previousPackageName VARCHAR(100) NULL,
+    previousProductID INT NULL,
+    subscriptionCanceledAt DATETIME NULL,
+    cancellationReason TEXT NULL, -- TEXT type to handle long JSON strings
+    timeCreatedAtUTC DATETIME,
+    timeUpdatedAtUTC DATETIME,
+    timeModifiedDB DATETIME
+);
+"""

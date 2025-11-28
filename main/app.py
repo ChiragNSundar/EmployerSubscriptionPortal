@@ -13,6 +13,8 @@ from Data.get_localsqldata import load_data
 from subscription_pages.daily_overview import layout as page1_layout, register_callbacks as register_page1_callbacks
 from subscription_pages.monthly_overview import layout as page2_layout, register_callbacks as register_page2_callbacks
 from subscription_pages.pie_chart import layout as page3_layout, register_callbacks as register_page3_callbacks
+from subscription_pages.daily_revenue_bar_chart import layout as page4_layout, register_callbacks as register_page4_callbacks
+from subscription_pages.monthly_revenue_bar_chart import layout as page5_layout, register_callbacks as register_page5_callbacks
 # ... (keep other page imports as they were) ...
 
 # --- INITIALIZE APP ---
@@ -53,6 +55,8 @@ def create_navbar():
             dbc.NavItem(dbc.NavLink("Daily Overview", href="/page-1")),
             dbc.NavItem(dbc.NavLink("Monthly Overview", href="/page-2")),
             dbc.NavItem(dbc.NavLink("Pie Chart", href="/page-3")),
+            dbc.NavItem(dbc.NavLink("Daily Revenue Bar Chart", href="/page-4")),
+            dbc.NavItem(dbc.NavLink("Monthly Revenue Bar Chart", href="/page-5")),
             # ... (keep your other links) ...
         ],
         brand="Employer Subscription Dashboard",
@@ -75,6 +79,8 @@ app.layout = html.Div([
 register_page1_callbacks(app)
 register_page2_callbacks(app)
 register_page3_callbacks(app)
+register_page4_callbacks(app)
+register_page5_callbacks(app)
 
 # ... (register other pages) ...
 
@@ -91,6 +97,10 @@ def display_page(pathname):
         return page2_layout
     elif pathname == '/page-3':
         return page3_layout
+    elif pathname == '/page-4':
+        return page4_layout
+    elif pathname == '/page-5':
+        return page5_layout
     else:
         return page1_layout
 

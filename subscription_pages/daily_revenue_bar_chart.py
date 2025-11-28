@@ -63,7 +63,7 @@ layout = dbc.Container([
             )
         ], width=12, md=4),
 
-    ], className="mb-4 p-3 bg-light rounded shadow-sm glass-container"),
+    ], className="mb-4  glass-container"),
 
     # --- Row 1: Placards (5 Cards) ---
     dbc.Row([

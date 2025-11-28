@@ -14,7 +14,7 @@ def create_card(title, card_id, color="primary"):
         ]),
         color=color,
         inverse=True,
-        className="mb-4 shadow-sm"
+        className="mb-4 shadow-sm "
     )
 
 

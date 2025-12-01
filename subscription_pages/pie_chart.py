@@ -22,6 +22,7 @@ layout = dbc.Container([
     html.H3("Location Analysis Dashboard", className="my-4 text-center"),
 
     # --- Row 0: Filters ---
+    # FIX APPLIED HERE: Added style={'position': 'relative', 'zIndex': '1000'}
     dbc.Row([
         # 1. Date Range Filter
         dbc.Col([
@@ -63,7 +64,8 @@ layout = dbc.Container([
             )
         ], width=12, md=4),
 
-    ], className="mb-4 glass-container"),
+    ], className="mb-4 glass-container", style={'position': 'relative', 'zIndex': '1000'}),
+    # ^^^ THIS LINE ABOVE FIXES THE CLIPPING ISSUE ^^^
 
     # --- Row 1: Placards ---
     dbc.Row([

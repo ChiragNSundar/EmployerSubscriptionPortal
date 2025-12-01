@@ -20,7 +20,9 @@ def create_card(title, card_id, color="primary"):
 
 layout = dbc.Container([
     html.H3("Daily Overview Dashboard", className="text-center my-4"),
+
     # --- Row 0: Filters ---
+    # UPDATE: Added style={'position': 'relative', 'zIndex': '1000'} to this Row
     dbc.Row([
         # 1. Date Range Picker
         dbc.Col([
@@ -62,7 +64,8 @@ layout = dbc.Container([
             )
         ], width=12, md=4),
 
-    ], className="mb-4  glass-container"),
+    ], className="mb-4 glass-container", style={'position': 'relative', 'zIndex': '1000'}),
+    # ^^^ THIS LINE ABOVE IS THE KEY FIX ^^^
 
     # --- Row 1: Placards ---
     dbc.Row([
@@ -78,7 +81,6 @@ layout = dbc.Container([
     dbc.Row([
         dbc.Col([
             dbc.Card([
-                #dbc.CardHeader("Daily Trend by Subscription Type"),
                 dbc.CardBody([
                     dcc.Graph(id='daily-type-bar-graph', style={'height': '500px'})
                 ])

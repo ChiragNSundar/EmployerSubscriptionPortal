@@ -1,4 +1,4 @@
-pip install dash dash_bootstrap_components pandas numpy python dotenv sqlalchemy pymysql pymongo
+pip install -r requirements.txt
 
 .env should contain the following:
 MONGO_URI=mongodblink

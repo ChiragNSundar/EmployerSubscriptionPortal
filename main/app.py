@@ -21,6 +21,12 @@ from subscription_pages.daily_revenue_comparison import layout as page6_layout, 
 from subscription_pages.monthly_revenue_comparison import layout as page7_layout, \
     register_callbacks as register_page7_callbacks
 
+from subscription_pages.package_analysis import layout as page8_layout, \
+    register_callbacks as register_page8_callbacks
+
+from subscription_pages.forecast import layout as page_forecast_layout, \
+    register_callbacks as register_forecast_callbacks
+
 # --- INITIALIZE APP ---
 # Added FONT_AWESOME to external_stylesheets for the icons
 app = dash.Dash(
@@ -81,6 +87,8 @@ def create_navbar():
                     dbc.NavItem(dbc.NavLink("Daily Overview", href="/page-1")),
                     dbc.NavItem(dbc.NavLink("Monthly Overview", href="/page-2")),
                     dbc.NavItem(dbc.NavLink("Pie Chart", href="/page-3")),
+                    dbc.NavItem(dbc.NavLink("Package Analysis", href="/page-8")),
+                    dbc.NavItem(dbc.NavLink("AI Forecast", href="/page-forecast")),
 
                     # Dropdown for Revenue Analytics (Grouping pages 4, 5, 6, 7)
                     dbc.DropdownMenu(
@@ -129,6 +137,8 @@ register_page4_callbacks(app)
 register_page5_callbacks(app)
 register_page6_callbacks(app)
 register_page7_callbacks(app)
+register_page8_callbacks(app)
+register_forecast_callbacks(app)
 
 
 # --- NAVBAR TOGGLE CALLBACK ---
@@ -164,6 +174,10 @@ def display_page(pathname):
         return page6_layout
     elif pathname == '/page-7':
         return page7_layout
+    elif pathname == '/page-8':
+        return page8_layout
+    elif pathname == '/page-forecast':
+        return page_forecast_layout
     else:
         # Default page
         return page1_layout

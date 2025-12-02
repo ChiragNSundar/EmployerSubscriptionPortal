@@ -71,11 +71,21 @@ def load_data(local_config=LOCAL_DB_CONFIG):
         print(f"❌ Error fetching data from local SQL: {e}")
         return None
 
-"""
-# --- Execute for Testing ---
+
+ # --- Execute for Testing ---
 if __name__ == "__main__":
     df_result = load_data()
     if df_result is not None and not df_result.empty:
-        print(df_result.head())
+        # print(df_result.head())
         print(df_result.info())
-"""
+        # ✅ Correct
+        # print(df_result['User_Status'].unique())
+
+
+        result = (df_result.groupby('Cancellation_Reason')
+                  .size()
+                  .reset_index(name='count')
+                  .query('count > 1')
+                  .head(2000))
+        print(result)
+

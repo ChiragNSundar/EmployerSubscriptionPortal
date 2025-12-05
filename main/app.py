@@ -8,7 +8,7 @@ import dash_bootstrap_components as dbc
 # --- IMPORT DATA LOADING ---
 from Data.get_localsqldata import load_data
 
-# --- IMPORT PAGES ---
+# --- IMPORT EXISTING PAGES ---
 from subscription_pages.daily_overview import layout as page1_layout, register_callbacks as register_page1_callbacks
 from subscription_pages.monthly_overview import layout as page2_layout, register_callbacks as register_page2_callbacks
 from subscription_pages.pie_chart import layout as page3_layout, register_callbacks as register_page3_callbacks
@@ -20,15 +20,34 @@ from subscription_pages.daily_revenue_comparison import layout as page6_layout, 
     register_callbacks as register_page6_callbacks
 from subscription_pages.monthly_revenue_comparison import layout as page7_layout, \
     register_callbacks as register_page7_callbacks
-
 from subscription_pages.package_analysis import layout as page8_layout, \
     register_callbacks as register_page8_callbacks
 
-from subscription_pages.forecast import layout as page_forecast_layout, \
-    register_callbacks as register_forecast_callbacks
+# --- IMPORT AI FORECAST PAGES ---
+
+# 1. Revenue Forecast (Random Forest - Original)
+# from subscription_pages.forecast import layout as page_forecast_layout, \
+#     register_callbacks as register_forecast_callbacks
+
+# 2. Employee Volume Forecast (Random Forest)
+from subscription_pages.subscription_pre import employee_forecast_layout as page_employee_layout, \
+    register_employee_callbacks as register_employee_callbacks
+
+# 3. Revenue Forecast (Prophet)
+from subscription_pages.prophet_forecast import prophet_layout as page_prophet_layout, \
+    register_prophet_callbacks as register_prophet_callbacks
+
+# 4. Employee Volume Forecast (Prophet - NEW)
+# Ensure you saved the previous code as 'prophet_employee_forecast.py'
+from subscription_pages.prophet_employee_forecast import prophet_employee_layout as page_prophet_employee_layout, \
+    register_prophet_employee_callbacks as register_prophet_employee_callbacks
+
+# 5. Churn Forecast (Commented out)
+# from subscription_pages.churn_forecast import churn_layout as page_churn_layout, \
+#     register_churn_callbacks as register_churn_callbacks
+
 
 # --- INITIALIZE APP ---
-# Added FONT_AWESOME to external_stylesheets for the icons
 app = dash.Dash(
     __name__,
     external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.FONT_AWESOME],
@@ -41,14 +60,11 @@ print("🚀 Loading data from Local SQL...")
 try:
     df = load_data()
 
-    # CHECK 1: Ensure df is not None and not empty
     if df is not None and not df.empty:
-
-        # CHECK 2: Handle Date Serialization
+        # Handle Date Serialization
         if 'Date' in df.columns:
             df['Date'] = df['Date'].astype(str)
 
-        # Optional: Convert other datetime columns to strings
         for col in df.select_dtypes(include=['datetime64']).columns:
             df[col] = df[col].astype(str)
 
@@ -63,14 +79,13 @@ except Exception as e:
     initial_data = []
 
 
-# --- NAVBAR COMPONENT (Redesigned) ---
+# --- NAVBAR COMPONENT ---
 def create_navbar():
     return dbc.Navbar(
         dbc.Container([
-            # Brand / Logo (Icon + Text)
+            # Brand / Logo
             html.A(
                 dbc.Row([
-                    # Using a chart icon similar to the reference
                     dbc.Col(html.I(className="fas fa-chart-line fa-lg me-2", style={"color": "#00d2ff"})),
                     dbc.Col(dbc.NavbarBrand("Employer Subscription Dashboard", className="ms-2")),
                 ], align="center", className="g-0"),
@@ -78,7 +93,7 @@ def create_navbar():
                 style={"textDecoration": "none"},
             ),
 
-            # Toggler for mobile responsiveness
+            # Toggler
             dbc.NavbarToggler(id="navbar-toggler", n_clicks=0),
 
             # Collapsible Links
@@ -88,9 +103,29 @@ def create_navbar():
                     dbc.NavItem(dbc.NavLink("Monthly Overview", href="/page-2")),
                     dbc.NavItem(dbc.NavLink("Pie Chart", href="/page-3")),
                     dbc.NavItem(dbc.NavLink("Package Analysis", href="/page-8")),
-                    dbc.NavItem(dbc.NavLink("AI Forecast", href="/page-forecast")),
 
-                    # Dropdown for Revenue Analytics (Grouping pages 4, 5, 6, 7)
+                    # --- UPDATED: AI FORECAST DROPDOWN ---
+                    dbc.DropdownMenu(
+                        children=[
+                            # Revenue Section
+                            # dbc.DropdownMenuItem("Revenue Forecast (Random Forest)", href="/page-forecast"),
+                            dbc.DropdownMenuItem("Revenue Forecast (Prophet)", href="/page-forecast-prophet"),
+
+                            dbc.DropdownMenuItem(divider=True),
+
+                            # Employee Volume Section
+                            dbc.DropdownMenuItem("Employee Volume (Random Forest)", href="/page-forecast-employee"),
+                            dbc.DropdownMenuItem("Employee Volume (Prophet)", href="/page-forecast-employee-prophet"),
+                            # NEW LINK
+
+                            # dbc.DropdownMenuItem("Churn Analysis", href="/page-forecast-churn"),
+                        ],
+                        nav=True,
+                        in_navbar=True,
+                        label="AI Forecasts",
+                    ),
+
+                    # Revenue Analytics Dropdown
                     dbc.DropdownMenu(
                         children=[
                             dbc.DropdownMenuItem("Daily Revenue Bar", href="/page-4"),
@@ -110,7 +145,7 @@ def create_navbar():
         ]),
         color="dark",
         dark=True,
-        className="mb-4 sticky-top",  # Sticky top ensures it stays visible
+        className="mb-4 sticky-top",
         expand="lg"
     )
 
@@ -118,12 +153,12 @@ def create_navbar():
 # --- APP LAYOUT ---
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
-    dcc.Store(id='global-data-store', data=initial_data),  # Data is stored here
+    dcc.Store(id='global-data-store', data=initial_data),
 
     # Navbar
     create_navbar(),
 
-    # Page Content Container
+    # Page Content
     dbc.Container([
         html.Div(id='page-content')
     ], fluid=True)
@@ -138,11 +173,18 @@ register_page5_callbacks(app)
 register_page6_callbacks(app)
 register_page7_callbacks(app)
 register_page8_callbacks(app)
-register_forecast_callbacks(app)
+
+# Register AI Forecast Callbacks
+# register_forecast_callbacks(app)  # Revenue (Random Forest)
+register_prophet_callbacks(app)  # Revenue (Prophet)
+register_employee_callbacks(app)  # Employee Volume (Random Forest)
+register_prophet_employee_callbacks(app)  # Employee Volume (Prophet) - NEW
+
+
+# register_churn_callbacks(app)   # Churn
 
 
 # --- NAVBAR TOGGLE CALLBACK ---
-# This is required for the mobile menu to open/close
 @callback(
     Output("navbar-collapse", "is_open"),
     [Input("navbar-toggler", "n_clicks")],
@@ -160,6 +202,7 @@ def toggle_navbar_collapse(n, is_open):
     Input('url', 'pathname')
 )
 def display_page(pathname):
+    # Standard Pages
     if pathname == '/page-1':
         return page1_layout
     elif pathname == '/page-2':
@@ -176,8 +219,20 @@ def display_page(pathname):
         return page7_layout
     elif pathname == '/page-8':
         return page8_layout
-    elif pathname == '/page-forecast':
-        return page_forecast_layout
+
+    # AI Forecast Pages
+    # elif pathname == '/page-forecast':
+    #     return page_forecast_layout
+    elif pathname == '/page-forecast-prophet':
+        return page_prophet_layout
+    elif pathname == '/page-forecast-employee':
+        return page_employee_layout
+    elif pathname == '/page-forecast-employee-prophet':  # NEW ROUTE
+        return page_prophet_employee_layout
+
+    # elif pathname == '/page-forecast-churn':
+    #     return page_churn_layout
+
     else:
         # Default page
         return page1_layout
@@ -185,3 +240,5 @@ def display_page(pathname):
 
 if __name__ == '__main__':
     app.run(port=8050, debug=True)
+
+            # , host='0.0.0.0')

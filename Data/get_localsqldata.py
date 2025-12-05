@@ -82,10 +82,10 @@ if __name__ == "__main__":
         # print(df_result['User_Status'].unique())
 
 
-        result = (df_result.groupby('Cancellation_Reason')
-                  .size()
-                  .reset_index(name='count')
-                  .query('count > 1')
-                  .head(2000))
-        print(result)
+        # result = (df_result.groupby('Cancellation_Reason')
+        #           .size()
+        #           .reset_index(name='count')
+        #           .query('count > 1')
+        #           .head(2000))
+        # print(result)
 

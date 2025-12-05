@@ -4,155 +4,88 @@ import plotly.graph_objs as go
 from dash import html, dcc, Input, Output, State
 import dash_bootstrap_components as dbc
 from prophet import Prophet
-from sklearn.metrics import mean_absolute_error
 
 # =============================================================================
 # 1. LAYOUT DEFINITION
 # =============================================================================
 prophet_layout = dbc.Container([
-    html.H3("AI Revenue Forecasting & Evaluation (Outliers Removed)", className="my-4 text-center text-white"),
+    html.H3("AI Revenue Forecasting (Outliers Removed)", className="my-4 text-center text-white"),
 
-    dbc.Tabs([
-        # ---------------------------------------------------------------------
-        # TAB 1: FUTURE FORECAST
-        # ---------------------------------------------------------------------
-        dbc.Tab(label="Future Forecast", children=[
-            html.Br(),
-            # --- KPI Cards Row ---
-            dbc.Row([
-                dbc.Col([
-                    dbc.Card([
-                        dbc.CardBody([
-                            html.H6(id='prophet-card-total-title', children="Total Revenue Predicted",
-                                    className="card-title text-muted"),
-                            html.H4(id='prophet-card-total-pred', children="€0.00", className="text-primary fw-bold")
-                        ])
-                    ], className="shadow-sm mb-3")
-                ], width=6, md=3),
-                dbc.Col([
-                    dbc.Card([
-                        dbc.CardBody([
-                            html.H6(id='prophet-card-new-title', children="New Revenue Predicted",
-                                    className="card-title text-muted"),
-                            html.H4(id='prophet-card-new-pred', children="€0.00", className="text-success fw-bold")
-                        ])
-                    ], className="shadow-sm mb-3")
-                ], width=6, md=3),
-                dbc.Col([
-                    dbc.Card([
-                        dbc.CardBody([
-                            html.H6(id='prophet-card-renewed-title', children="Renewed Revenue Predicted",
-                                    className="card-title text-muted"),
-                            html.H4(id='prophet-card-renewed-pred', children="€0.00", className="text-info fw-bold")
-                        ])
-                    ], className="shadow-sm mb-3")
-                ], width=6, md=3),
-                dbc.Col([
-                    dbc.Card([
-                        dbc.CardBody([
-                            html.H6(id='prophet-card-upgraded-title', children="Upgraded Revenue Predicted",
-                                    className="card-title text-muted"),
-                            html.H4(id='prophet-card-upgraded-pred', children="€0.00", className="text-warning fw-bold")
-                        ])
-                    ], className="shadow-sm mb-3")
-                ], width=6, md=3),
-            ], className="mb-2"),
+    # ---------------------------------------------------------------------
+    # FUTURE FORECAST DASHBOARD
+    # ---------------------------------------------------------------------
+    html.Br(),
 
-            # --- Controls Row ---
-            dbc.Row([
-                dbc.Col([
-                    html.Label("Days to Predict:", className="fw-bold"),
-                    dbc.Input(id='prophet-forecast-days', type='number', value=30, min=7, max=365, step=1)
-                ], width=12, md=6, style={'zIndex': '1000', 'position': 'relative'}),
-
-                dbc.Col([
-                    html.Br(),
-                    dbc.Button("Generate Future Forecast", id='btn-run-prophet', color="primary", className="w-100")
-                ], width=12, md=6, style={'zIndex': '1000', 'position': 'relative'}),
-
-            ], className="mb-4 glass-container",
-                style={'overflow': 'visible', 'position': 'relative', 'zIndex': '1000'}),
-
-            # --- Graph Row ---
-            dbc.Row([
-                dbc.Col([
-                    dbc.Card([
-                        dbc.CardBody([
-                            dcc.Loading(
-                                id="loading-prophet",
-                                type="default",
-                                children=dcc.Graph(id='prophet-graph', style={'height': '500px'})
-                            )
-                        ])
-                    ], className="shadow-sm glass-container", style={'zIndex': '1', 'position': 'relative'})
-                ], width=12)
-            ])
-        ]),
-
-        # ---------------------------------------------------------------------
-        # TAB 2: MODEL ACCURACY
-        # ---------------------------------------------------------------------
-        dbc.Tab(label="Model Accuracy (Backtesting)", children=[
-            html.Br(),
-            dbc.Row([
-                dbc.Col([
-                    html.H5("Train/Test Split Evaluation", className="text-white"),
-                    html.P(
-                        "This module removes outliers, hides the last N days of data (Test Set), trains the model on the rest, and compares predictions.",
-                        className="text-white"),
+    # --- KPI Cards Row ---
+    dbc.Row([
+        dbc.Col([
+            dbc.Card([
+                dbc.CardBody([
+                    html.H6(id='prophet-card-total-title', children="Total Revenue Predicted",
+                            className="card-title text-muted"),
+                    html.H4(id='prophet-card-total-pred', children="€0.00", className="text-primary fw-bold")
                 ])
-            ]),
+            ], className="shadow-sm mb-3")
+        ], width=6, md=3),
+        dbc.Col([
+            dbc.Card([
+                dbc.CardBody([
+                    html.H6(id='prophet-card-new-title', children="New Revenue Predicted",
+                            className="card-title text-muted"),
+                    html.H4(id='prophet-card-new-pred', children="€0.00", className="text-success fw-bold")
+                ])
+            ], className="shadow-sm mb-3")
+        ], width=6, md=3),
+        dbc.Col([
+            dbc.Card([
+                dbc.CardBody([
+                    html.H6(id='prophet-card-renewed-title', children="Renewed Revenue Predicted",
+                            className="card-title text-muted"),
+                    html.H4(id='prophet-card-renewed-pred', children="€0.00", className="text-info fw-bold")
+                ])
+            ], className="shadow-sm mb-3")
+        ], width=6, md=3),
+        dbc.Col([
+            dbc.Card([
+                dbc.CardBody([
+                    html.H6(id='prophet-card-upgraded-title', children="Upgraded Revenue Predicted",
+                            className="card-title text-muted"),
+                    html.H4(id='prophet-card-upgraded-pred', children="€0.00", className="text-warning fw-bold")
+                ])
+            ], className="shadow-sm mb-3")
+        ], width=6, md=3),
+    ], className="mb-2"),
 
-            # --- Controls ---
-            dbc.Row([
-                dbc.Col([
-                    html.Label("Test Set Size (Days):", className="fw-bold text-white"),
-                    dbc.Input(id='prophet-test-days', type='number', value=30, min=7, max=90, step=1),
-                ], width=6),
-                dbc.Col([
-                    html.Br(),
-                    dbc.Button("Run Accuracy Test", id='btn-test-prophet', color="warning", className="w-100")
-                ], width=6)
-            ], className="mb-4"),
+    # --- Controls Row ---
+    dbc.Row([
+        dbc.Col([
+            html.Label("Days to Predict:", className="fw-bold text-white"),
+            dbc.Input(id='prophet-forecast-days', type='number', value=30, min=7, max=365, step=1)
+        ], width=12, md=6, style={'zIndex': '1000', 'position': 'relative'}),
 
-            # --- Accuracy Metrics Cards ---
-            dbc.Row([
-                dbc.Col([
-                    dbc.Card([
-                        dbc.CardBody([
-                            html.H6("Mean Absolute Error (MAE)", className="card-title text-muted"),
-                            html.H4(id='test-mae', children="€0.00", className="text-danger fw-bold"),
-                            html.Small("Lower is better. Avg error in €.")
-                        ])
-                    ], className="shadow-sm mb-3")
-                ], width=6),
-                dbc.Col([
-                    dbc.Card([
-                        dbc.CardBody([
-                            html.H6("Accuracy (1 - MAPE)", className="card-title text-muted"),
-                            html.H4(id='test-accuracy', children="0%", className="text-success fw-bold"),
-                            html.Small("Higher is better. Based on Total Revenue.")
-                        ])
-                    ], className="shadow-sm mb-3")
-                ], width=6),
-            ]),
+        dbc.Col([
+            html.Br(),
+            dbc.Button("Generate Future Forecast", id='btn-run-prophet', color="primary", className="w-100")
+        ], width=12, md=6, style={'zIndex': '1000', 'position': 'relative'}),
 
-            # --- Accuracy Graph ---
-            dbc.Row([
-                dbc.Col([
-                    dbc.Card([
-                        dbc.CardBody([
-                            dcc.Loading(
-                                id="loading-test",
-                                type="default",
-                                children=dcc.Graph(id='prophet-test-graph', style={'height': '500px'})
-                            )
-                        ])
-                    ], className="shadow-sm glass-container")
-                ], width=12)
-            ])
-        ])
+    ], className="mb-4 glass-container",
+        style={'overflow': 'visible', 'position': 'relative', 'zIndex': '1000'}),
+
+    # --- Graph Row ---
+    dbc.Row([
+        dbc.Col([
+            dbc.Card([
+                dbc.CardBody([
+                    dcc.Loading(
+                        id="loading-prophet",
+                        type="default",
+                        children=dcc.Graph(id='prophet-graph', style={'height': '500px'})
+                    )
+                ])
+            ], className="shadow-sm glass-container", style={'zIndex': '1', 'position': 'relative'})
+        ], width=12)
     ])
+
 ], fluid=True)
 
 
@@ -160,7 +93,7 @@ prophet_layout = dbc.Container([
 # 2. HELPER FUNCTIONS
 # =============================================================================
 
-# --- NEW HELPER: OUTLIER REMOVAL (IQR METHOD) ---
+# --- OUTLIER REMOVAL (IQR METHOD) ---
 def remove_outliers_iqr(df):
     """
     Removes rows where Revenue is an outlier using the Interquartile Range (IQR) method.
@@ -182,7 +115,7 @@ def remove_outliers_iqr(df):
     return df_clean
 
 
-# --- A. FUTURE PREDICTION LOGIC ---
+# --- FUTURE PREDICTION LOGIC ---
 def get_prophet_revenue_prediction(df_in, days_to_predict):
     df = df_in.copy()
     df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
@@ -254,75 +187,11 @@ def get_prophet_revenue_prediction(df_in, days_to_predict):
     }
 
 
-# --- B. ACCURACY EVALUATION LOGIC ---
-def evaluate_prophet_accuracy(df_in, test_days):
-    df = df_in.copy()
-    df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
-    df = df.dropna(subset=['Date'])
-
-    if df.empty: return None
-
-    # --- STEP 1: REMOVE OUTLIERS ---
-    # Remove anomalies before training/testing
-    df = remove_outliers_iqr(df)
-
-    # 1. Aggregate Total Revenue per day
-    daily_df = df.groupby(pd.Grouper(key='Date', freq='D'))['Revenue'].sum().reset_index()
-    daily_df = daily_df.rename(columns={'Date': 'ds', 'Revenue': 'y'})
-
-    # Fill missing dates with 0
-    full_range = pd.date_range(start=daily_df['ds'].min(), end=daily_df['ds'].max(), freq='D')
-    daily_df = daily_df.set_index('ds').reindex(full_range, fill_value=0).reset_index().rename(columns={'index': 'ds'})
-
-    # 2. Split Train and Test
-    cutoff_date = daily_df['ds'].max() - pd.Timedelta(days=test_days)
-
-    train_df = daily_df[daily_df['ds'] <= cutoff_date]
-    test_df = daily_df[daily_df['ds'] > cutoff_date]
-
-    if len(train_df) < 10: return None
-
-    # 3. Train Model
-    m = Prophet(daily_seasonality=True, yearly_seasonality=False, weekly_seasonality=True)
-    m.fit(train_df)
-
-    # 4. Predict
-    future = m.make_future_dataframe(periods=int(test_days))
-    forecast = m.predict(future)
-
-    test_forecast = forecast[forecast['ds'] > cutoff_date]
-
-    # 5. Calculate Metrics
-    y_true = test_df['y'].values
-    y_pred = np.maximum(test_forecast['yhat'].values[-len(y_true):], 0)
-
-    mae = mean_absolute_error(y_true, y_pred)
-
-    total_actual = np.sum(y_true)
-    total_abs_error = np.sum(np.abs(y_true - y_pred))
-
-    if total_actual > 0:
-        weighted_mape = (total_abs_error / total_actual) * 100
-        accuracy = 100 - weighted_mape
-    else:
-        accuracy = 0
-
-    if accuracy < 0: accuracy = 0
-
-    return {
-        'mae': mae,
-        'accuracy': accuracy,
-        'train_df': train_df,
-        'test_df': test_df,
-        'forecast_df': test_forecast
-    }
-
-
 # =============================================================================
 # 3. CALLBACK REGISTRATION
 # =============================================================================
 def register_prophet_callbacks(app):
-    # --- CALLBACK 1: FUTURE FORECAST ---
+    # --- CALLBACK: FUTURE FORECAST ---
     @app.callback(
         [Output('prophet-card-total-pred', 'children'),
          Output('prophet-card-new-pred', 'children'),
@@ -437,70 +306,3 @@ def register_prophet_callbacks(app):
         return (fmt(sum_total), fmt(sum_new), fmt(sum_renewed), fmt(sum_upgraded), fig,
                 f"Total Revenue {title_suffix}", f"New Revenue {title_suffix}",
                 f"Renewed Revenue {title_suffix}", f"Upgraded Revenue {title_suffix}")
-
-    # --- CALLBACK 2: ACCURACY TEST ---
-    @app.callback(
-        [Output('test-mae', 'children'),
-         Output('test-accuracy', 'children'),
-         Output('prophet-test-graph', 'figure')],
-        [Input('btn-test-prophet', 'n_clicks')],
-        [State('global-data-store', 'data'),
-         State('prophet-test-days', 'value')]
-    )
-    def run_accuracy_test(n_clicks, data, test_days):
-        if not data or n_clicks is None:
-            return "€0.00", "0%", go.Figure().update_layout(title="Click 'Run Accuracy Test' to see results")
-
-        df = pd.DataFrame(data)
-
-        # Data Cleaning
-        if 'lastPaymentReceivedOn' in df.columns:
-            df['Date'] = pd.to_datetime(df['lastPaymentReceivedOn'], errors='coerce')
-        elif 'dateUTC' in df.columns:
-            df['Date'] = pd.to_datetime(df['dateUTC'], errors='coerce')
-        elif 'Date' in df.columns:
-            df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
-
-        if 'lastAmountPaidEUR' in df.columns:
-            df['Revenue'] = pd.to_numeric(df['lastAmountPaidEUR'], errors='coerce').fillna(0)
-        elif 'Revenue' in df.columns:
-            df['Revenue'] = pd.to_numeric(df['Revenue'], errors='coerce').fillna(0)
-
-        # Run Evaluation (Outliers are removed inside the function)
-        res = evaluate_prophet_accuracy(df, test_days)
-
-        if not res:
-            return "Error", "Error", go.Figure().update_layout(title="Insufficient Data for Testing")
-
-        # Create Graph
-        fig = go.Figure()
-
-        # 1. Training Data (Past)
-        fig.add_trace(go.Scatter(
-            x=res['train_df']['ds'], y=res['train_df']['y'],
-            mode='lines', name='Training Data',
-            line=dict(color='gray', width=2), opacity=0.5
-        ))
-
-        # 2. Actual Test Data (The Truth)
-        fig.add_trace(go.Scatter(
-            x=res['test_df']['ds'], y=res['test_df']['y'],
-            mode='lines+markers', name='Actual Revenue (Test Set)',
-            line=dict(color='#198754', width=3)
-        ))
-
-        # 3. Predicted Data (The Model)
-        fig.add_trace(go.Scatter(
-            x=res['forecast_df']['ds'], y=np.maximum(res['forecast_df']['yhat'], 0),
-            mode='lines', name='Predicted Revenue',
-            line=dict(color='#dc3545', width=3, dash='dash')
-        ))
-
-        fig.update_layout(
-            title=f"Backtesting Results (Last {test_days} Days)",
-            xaxis_title="Date", yaxis_title="Revenue (€)",
-            template="plotly_white", hovermode="x unified",
-            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
-        )
-
-        return f"€{res['mae']:,.2f}", f"{res['accuracy']:.1f}%", fig

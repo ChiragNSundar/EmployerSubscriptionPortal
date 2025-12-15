@@ -225,4 +225,3 @@ def toggle_navbar_collapse(n, is_open):
 if __name__ == '__main__':
     app.run(debug=True, port=8050)
 
-    print(df.info())

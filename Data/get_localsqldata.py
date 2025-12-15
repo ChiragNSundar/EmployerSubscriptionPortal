@@ -32,7 +32,7 @@ def load_data(local_config=LOCAL_DB_CONFIG):
         local_engine = create_engine(local_conn_str)
 
         # 3. Define the SQL Query
-        query = "SELECT * FROM graph_subscription"
+        query = "SELECT * FROM graph_subscription where dateUTC IS NOT NULL;"
 
         # 4. Execute Query and Load into DataFrame
         df = pd.read_sql(query, con=local_engine)

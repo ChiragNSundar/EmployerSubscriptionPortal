@@ -111,10 +111,10 @@ def get_churn_prediction(df_in, days_to_predict):
     df['type_norm'] = df['Subscription_Type'].str.lower().str.strip()
 
     # Define Churn
-    df['is_churn'] = df['type_norm'].isin(['cancelled', 'canceled', 'cancellation'])
+    df['is_churn'] = df['type_norm'].isin(['cancelled'])
 
     # Define Inflow (Growth)
-    df['is_inflow'] = df['type_norm'].isin(['new', 'renewed', 'upgraded'])
+    df['is_inflow'] = df['type_norm'].isin(['new', 'renewed', 'upgraded','trial'])
 
     # 3. Group by Day
     daily_stats = df.groupby(pd.Grouper(key='Date', freq='D')).agg(
@@ -182,6 +182,9 @@ def get_churn_prediction(df_in, days_to_predict):
 
     total_pred_inflow = np.sum(pred_inflow)
     net_growth = total_pred_inflow - total_pred_churn
+
+    print(total_pred_inflow)
+    print(total_pred_churn)
 
     return {
         'metrics': (total_pred_churn, avg_daily_churn, max_churn_spike, net_growth),

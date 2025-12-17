@@ -1,7 +1,5 @@
-#fetches local sql data hosted on xampp sql server
-
 import pandas as pd
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine
 import pymysql
 
 # --- Local XAMPP Configuration ---
@@ -19,7 +17,6 @@ def load_data(local_config=LOCAL_DB_CONFIG):
     Connects to the local MySQL database, fetches data from 'graph_subscription',
     renames columns for clarity, and returns it as a Pandas DataFrame.
     """
-    # 1. Construct Local Connection String
     local_conn_str = (
         f"mysql+pymysql://{local_config['user']}:{local_config['password']}"
         f"@{local_config['host']}:{local_config['port']}/{local_config['database']}"
@@ -27,26 +24,21 @@ def load_data(local_config=LOCAL_DB_CONFIG):
 
     try:
         print(f"🔄 Connecting to Local Database ({local_config['database']})...")
-
-        # 2. Create Database Engine
         local_engine = create_engine(local_conn_str)
 
-        # 3. Define the SQL Query
+        # Select all columns
         query = "SELECT * FROM graph_subscription where dateUTC IS NOT NULL;"
-
-        # 4. Execute Query and Load into DataFrame
         df = pd.read_sql(query, con=local_engine)
 
-        # 5. Check if data was retrieved
         if df.empty:
-            print("⚠️ Connection successful, but the table 'graph_subscription' is empty.")
+            print("⚠️ Table 'graph_subscription' is empty.")
             return df
 
-        # --- 6. RENAME COLUMNS ---
-        # Mapping: {'Old_SQL_Name': 'New_Friendly_Name'}
+        # --- RENAME COLUMNS ---
+        # Added the specific date columns to ensure they are mapped correctly if needed
         column_mapping = {
-            'dateUTC': 'Date',  # Renamed for clarity
-            'type': 'Subscription_Type',  # The column with New, Renewed, etc.
+            'dateUTC': 'Date',
+            'type': 'Subscription_Type',
             'companyName': 'Company',
             'country': 'Location',
             'currentPackageAmountEUR': 'Revenue',
@@ -54,17 +46,20 @@ def load_data(local_config=LOCAL_DB_CONFIG):
             'recruitMode': 'Recruit_Mode',
             'currentPackageName': 'Package_Name',
             'cancellationReason': 'Cancellation_Reason',
-            'userID': 'User_ID'
+            'userID': 'User_ID',
+
+            # Ensuring these are mapped if the SQL names differ, 
+            # otherwise they pass through as-is if they match the keys below
+            'customerCreatedTimeUTC': 'customerCreatedTimeUTC',
+            'initialSubsStartDate': 'initialSubsStartDate',
+            'lastPaymentReceivedOn': 'lastPaymentReceivedOn',
+            'subscriptionCanceledAt': 'subscriptionCanceledAt'
         }
 
         # Apply the renaming
         df.rename(columns=column_mapping, inplace=True)
 
-        print(f"✅ Success! Loaded {len(df)} rows and renamed columns.")
-
-        # Optional: Print new columns to verify
-        # print("New Columns:", df.columns.tolist())
-
+        print(f"✅ Success! Loaded {len(df)} rows.")
         return df
 
     except Exception as e:
@@ -72,20 +67,7 @@ def load_data(local_config=LOCAL_DB_CONFIG):
         return None
 
 
- # --- Execute for Testing ---
 if __name__ == "__main__":
     df_result = load_data()
-    if df_result is not None and not df_result.empty:
-        # print(df_result.head())
+    if df_result is not None:
         print(df_result.info())
-        # ✅ Correct
-        # print(df_result['User_Status'].unique())
-
-
-        # result = (df_result.groupby('Cancellation_Reason')
-        #           .size()
-        #           .reset_index(name='count')
-        #           .query('count > 1')
-        #           .head(2000))
-        # print(result)
-

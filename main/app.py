@@ -42,6 +42,17 @@ from subscription_pages.paid_subs_insights import layout as paid_subs_layout, \
 from subscription_pages.location_paid_insights import layout as loc_paid_layout, \
     register_callbacks as register_loc_paid_callbacks
 
+# User Retention & Conversion
+from subscription_pages.user_retention import layout as retention_layout, \
+    register_callbacks as register_retention_callbacks
+
+from subscription_pages.Time_to_First_Subscription import layout as first_sub_layout, \
+    register_callbacks as register_first_sub_callbacks
+
+# --- NEW PAGE IMPORT (Subscription Duration) ---
+from subscription_pages.subscription_duration import layout as duration_layout, \
+    register_callbacks as register_duration_callbacks
+
 # Cancellations
 from subscription_pages.cancellation_insights import layout as cancellation_layout, \
     register_callbacks as register_cancellation_callbacks
@@ -63,6 +74,7 @@ server = app.server
 
 # --- LOAD DATA ---
 df = load_data()
+
 initial_data = df.to_dict('records') if df is not None else []
 
 # --- NAVBAR ---
@@ -94,6 +106,11 @@ navbar = dbc.Navbar(
                     # Paid Subs Section
                     dbc.DropdownMenuItem("💸 Paid Subs (Time)", href="/paid-subs-insights"),
                     dbc.DropdownMenuItem("🗺️ Paid Subs (Location)", href="/location-paid-insights"),
+
+                    # Retention & Conversion Section
+                    dbc.DropdownMenuItem("🔄 User Retention", href="/user-retention"),
+                    dbc.DropdownMenuItem("⏱️ Time to First Sub", href="/time-to-first-sub"),
+                    dbc.DropdownMenuItem("⏳ Sub Duration", href="/sub-duration"),  # <--- NEW LINK ADDED HERE
                     dbc.DropdownMenuItem(divider=True),
 
                     # Cancellation Section
@@ -148,6 +165,9 @@ register_volume_time_callbacks(app)
 register_volume_location_callbacks(app)
 register_paid_subs_callbacks(app)
 register_loc_paid_callbacks(app)
+register_retention_callbacks(app)
+register_first_sub_callbacks(app)
+register_duration_callbacks(app)  # <--- NEW CALLBACK REGISTERED HERE
 register_cancellation_callbacks(app)
 register_loc_cancel_callbacks(app)
 
@@ -196,6 +216,12 @@ def display_page(pathname):
         return paid_subs_layout
     elif pathname == '/location-paid-insights':
         return loc_paid_layout
+    elif pathname == '/user-retention':
+        return retention_layout
+    elif pathname == '/time-to-first-sub':
+        return first_sub_layout
+    elif pathname == '/sub-duration':  # <--- NEW ROUTE ADDED HERE
+        return duration_layout
     elif pathname == '/cancellation-insights':
         return cancellation_layout
     elif pathname == '/location-cancellation-insights':
@@ -224,4 +250,3 @@ def toggle_navbar_collapse(n, is_open):
 
 if __name__ == '__main__':
     app.run(debug=True, port=8050)
-

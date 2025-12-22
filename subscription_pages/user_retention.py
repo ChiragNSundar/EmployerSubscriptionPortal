@@ -40,9 +40,7 @@ def register_callbacks(app):
             else:
                 df['subscriptionCanceledAt'] = pd.NaT
 
-            # ==============================================================================
             # PART A: DURATION ANALYSIS
-            # ==============================================================================
 
             # 1. Filter valid start dates
             df_dur = df.dropna(subset=['initialSubsStartDate']).copy()
